@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Mission</title>
+</head>
+<body>
+    <h1>Remplir les informations de la mission</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label for="nom">Nom et Prénom:</label>
+        <input type="text" id="nom" name="nom" required><br><br>
+
+        <label for="fonction">Fonction:</label>
+        <input type="text" id="fonction" name="fonction" required><br><br>
+
+        <label for="mission">Objet de la mission:</label>
+        <input type="text" id="mission" name="mission" required><br><br>
+
+        <label for="date_debut">Début de la mission (Date et heure):</label>
+        <input type="datetime-local" id="date_debut" name="date_debut" required><br><br>
+
+        <label for="date_fin">Fin de la mission (Date et heure):</label>
+        <input type="datetime-local" id="date_fin" name="date_fin" required><br><br>
+
+        <label for="lieu">Lieu de la mission:</label>
+        <input type="text" id="lieu" name="lieu" required><br><br>
+
+        <label for="type_frais">Type de frais:</label>
+        <input type="text" id="type_frais" name="type_frais" required><br><br>
+
+        <label for="budget">Budget:</label>
+        <input type="number" id="budget" name="budget" step="0.01" required><br><br>
+
+        <label for="n">Nombre de personnes:</label>
+        <input type="number" id="n" name="n" value="1" min="1" required><br><br>
+
+        <label for="n2">Nombre de frais:</label>
+        <input type="number" id="n2" name="n2" value="1" min="1" required><br><br>
+
+        <div id="personnes">
+            <h2>Personnes</h2>
+            <div id="person_0">
+                <label for="prenom_0">Prénom:</label>
+                <input type="text" id="prenom_0" name="prenom_0" required><br>
+
+                <label for="nom_0">Nom:</label>
+                <input type="text" id="nom_0" name="nom_0" required><br>
+
+                <label for="fonction_0">Fonction:</label>
+                <input type="text" id="fonction_0" name="fonction_0" required><br>
+
+                <label for="delegation_0">Délégation de rattachement:</label>
+                <input type="text" id="delegation_0" name="delegation_0" required><br><br>
+            </div>
+        </div>
+
+        <div id="fichier_personnes" style="display: none;">
+            <label for="personnes_fichier">Télécharger un fichier avec les informations des personnes:</label>
+            <input type="file" id="personnes_fichier" name="personnes_fichier" accept=".pdf"><br><br>
+        </div>
+
+        
+        <div id="justificatifs">
+            <h2>Justificatifs</h2>
+            <div id="justificatif_0">
+                <label for="nature_0">Nature:</label>
+                <input type="text" id="nature_0" name="nature_0" required><br>
+
+                <label for="montant_0">Montant:</label>
+                <input type="number" id="montant_0" name="montant_0" step="0.01" required><br>
+
+                <label for="fichier_0">Justificatif (PDF):</label>
+                <input type="file" id="fichier_0" name="fichier_0" accept="application/pdf" step="0.01" required><br><br>
+
+            </div>
+        </div>
+
+        <h2>Informations bancaires</h2>
+        <div id="rib_section">
+            <input type="checkbox" id="rib_deja_donne" name="rib_deja_donne">
+            <label for="rib_deja_donne">J'ai déjà donné mon RIB</label><br><br>
+
+            <label for="rib_fichier">Télécharger un RIB (PDF):</label>
+            <input type="file" id="rib_fichier" name="rib_fichier" accept="application/pdf" disabled><br><br>
+        </div>
+
+        <button type="submit">Générer les PDFs</button>
+    </form>
+
+    <script>
+        // Script pour ajouter des champs pour les personnes
+        document.getElementById('n').addEventListener('change', function() {
+            const n = parseInt(this.value);
+            const personnesDiv = document.getElementById('personnes');
+            const fichierDiv = document.getElementById('fichier_personnes');
+
+            if (n > 8) {
+                personnesDiv.style.display = "none";
+                fichierDiv.style.display = "block";
+            } else {
+
+                personnesDiv.style.display = "block";
+                fichierDiv.style.display = "none";
+
+            // Vider les anciens champs
+                personnesDiv.innerHTML = '<h2>Personnes</h2>';
+
+            // Ajouter les champs pour chaque personne
+                for (let i = 0; i < n; i++) {
+                    const div = document.createElement('div');
+                    div.id = `person_${i}`;
+                    div.innerHTML = `
+                        <label for="prenom_${i}">Prénom:</label>
+                        <input type="text" id="prenom_${i}" name="prenom_${i}" required><br>
+                        <label for="nom_${i}">Nom:</label>
+                        <input type="text" id="nom_${i}" name="nom_${i}" required><br>
+                        <label for="fonction_${i}">Fonction:</label>
+                        <input type="text" id="fonction_${i}" name="fonction_${i}" required><br>
+                        <label for="delegation_${i}">Délégation de rattachement:</label>
+                        <input type="text" id="delegation_${i}" name="delegation_${i}" required><br><br>
+                    `;
+                    personnesDiv.appendChild(div);
+            }   }
+        });
+    </script>
+
+    <script>
+
+        
+        // Script pour ajouter des champs pour les frais
+        document.getElementById('n2').addEventListener('change', function() {
+            const n2 = parseInt(this.value);
+            const justifDiv = document.getElementById('justificatifs');
+
+            // Vider les anciens champs
+            justifDiv.innerHTML = '<h2>Justificatifs</h2>';
+
+            // Ajouter les champs pour chaque personne
+            for (let i = 0; i < n2; i++) {
+                const div = document.createElement('div');
+                div.id = `justificatif_${i}`;
+                div.innerHTML = `
+                    <label for="nature_${i}">Nature:</label>
+                    <input type="text" id="nature_${i}" name="nature_${i}" required><br>
+                    <label for="montant_${i}">Montant:</label>
+                    <input type="number" id="montant_${i}" name="montant_${i}" step="0.01" required><br><br>
+                    <label for="fichier_${i}">Justificatif (PDF):</label>
+                    <input type="file" id="fichier_${i}" name="fichier_${i}" accept="application/pdf" required><br><br>
+                `;
+                justifDiv.appendChild(div);
+            }
+        });
+    </script>
+
+<script>
+    document.getElementById('rib_deja_donne').addEventListener('change', function() {
+        const ribFichierInput = document.getElementById('rib_fichier');
+        ribFichierInput.disabled = this.checked; // Désactiver si la case est cochée
+        if (this.checked) {
+            ribFichierInput.value = ''; // Réinitialiser le champ fichier
+        }
+    });
+</script>
+</body>
+</html>
