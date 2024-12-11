@@ -6,13 +6,24 @@
     <title>Formulaire de Mission</title>
 </head>
 <body>
-    <h1>Remplir les informations de la mission</h1>
+    <h1>Note de Frais</h1>
+    <p > 
+        <i>
+            Informations à propos de la personne souhaitant se faire rembourser.
+        </i>
+    <br></p>
     <form method="post" enctype="multipart/form-data">
         <label for="nom">Nom et Prénom:</label>
         <input type="text" id="nom" name="nom" required><br><br>
 
         <label for="fonction">Fonction:</label>
         <input type="text" id="fonction" name="fonction" required><br><br>
+
+        <p > 
+            <i>
+                Informations à propos de la mission.
+            </i>
+        <br></p>
 
         <label for="mission">Objet de la mission:</label>
         <input type="text" id="mission" name="mission" required><br><br>
@@ -29,9 +40,6 @@
         <label for="type_frais">Type de frais:</label>
         <input type="text" id="type_frais" name="type_frais" required><br><br>
 
-        <label for="budget">Budget:</label>
-        <input type="number" id="budget" name="budget" step="0.01" required><br><br>
-
         <label for="n">Nombre de personnes:</label>
         <input type="number" id="n" name="n" value="1" min="1" required><br><br>
 
@@ -40,6 +48,15 @@
 
         <div id="personnes">
             <h2>Personnes</h2>
+            <p > 
+                <i>
+                    Pour chaque personne impliquée dans la mission et bénéficiant des frais à rembourser, indiquer le prénom, le nom, la fonction (PSE,DLUS,FCI...) et la délégation de rattachement (UL 12, DT Paris...).
+                    <br>
+                    Si le nombre de personne est au dessus de 8, fournir l'extraction pegass de la mission.
+                </i>
+            <br></p>
+
+            
             <div id="person_0">
                 <label for="prenom_0">Prénom:</label>
                 <input type="text" id="prenom_0" name="prenom_0" required><br>
@@ -62,7 +79,18 @@
 
         
         <div id="justificatifs">
+            
             <h2>Justificatifs</h2>
+
+            <p>
+                <i> Pour chaque frais engagé, indiquer la nature (repas, trains aller...), le montant exacte et fournir un justificatif.
+                    <br> Un justificatif par frais. <br> </i>
+            </p>
+
+            
+            
+            
+            
             <div id="justificatif_0">
                 <label for="nature_0">Nature:</label>
                 <input type="text" id="nature_0" name="nature_0" required><br>
@@ -76,7 +104,14 @@
             </div>
         </div>
 
-        <h2>Informations bancaires</h2>
+        <h2>Relevé d'identité bancaire</h2>
+
+        <p>
+            <i>
+                Si vous avez déjà donné votre RIB précédemment, cocher la case "J'ai donné mon RIB".
+                Sinon, fournir le RIB au format pdf.
+            </i>
+        </p>
         <div id="rib_section">
             <input type="checkbox" id="rib_deja_donne" name="rib_deja_donne">
             <label for="rib_deja_donne">J'ai déjà donné mon RIB</label><br><br>
@@ -84,6 +119,14 @@
             <label for="rib_fichier">Télécharger un RIB (PDF):</label>
             <input type="file" id="rib_fichier" name="rib_fichier" accept="application/pdf" disabled><br><br>
         </div>
+
+        <p>
+            <i>
+                Une fois le pdf téléchargé, signer et dater en bas des pages 1 et 3 dans la cas "Le Demandeur". <br>
+                Envoyer la note de frais à dlus.paris12@croix-rouge.fr
+            </i>
+            
+        </p>
 
         <button type="submit">Générer les PDFs</button>
     </form>
@@ -154,13 +197,21 @@
     </script>
 
 <script>
-    document.getElementById('rib_deja_donne').addEventListener('change', function() {
-        const ribFichierInput = document.getElementById('rib_fichier');
+    document.addEventListener('DOMContentLoaded', function() {
+    const ribCheckbox = document.getElementById('rib_deja_donne');
+    const ribFichierInput = document.getElementById('rib_fichier');
+
+    // Initialisation : désactiver ou activer selon l'état initial de la case
+    ribFichierInput.disabled = ribCheckbox.checked;
+
+    // Écouteur sur le changement de l'état de la case
+    ribCheckbox.addEventListener('change', function() {
         ribFichierInput.disabled = this.checked; // Désactiver si la case est cochée
         if (this.checked) {
             ribFichierInput.value = ''; // Réinitialiser le champ fichier
         }
     });
+});
 </script>
 </body>
 </html>

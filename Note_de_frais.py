@@ -45,7 +45,6 @@ def form():
         date_fin = request.form['date_fin']
         lieu = request.form['lieu']
         type_frais = request.form['type_frais']
-        budget = request.form['budget']
         n = int(request.form['n'])
         n2 = int(request.form['n2'])
 
@@ -87,7 +86,7 @@ def form():
             files_justificatifs.append(rib_file)
 
         # Génération des PDFs remplis
-        ordre_de_mission = fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, "Adrien Dumont Passegio", type_frais, budget, personnes = None)
+        ordre_de_mission = fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, "Adrien Dumont Passegio", type_frais, justificatifs, personnes)
         note_de_frais = fill_pdf_note_de_frais(nom,fonction,date_debut,ajd,mission,justificatifs)
         pdf_final = create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs)
         
@@ -106,9 +105,11 @@ def formatdate(date,t):
         return date[8:10] + "/" + date[5:7] + "/" + date[:4] + " " + date[11:13] + "h" + date[14:]
 
 
-def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, type_frais, budget, personnes):
+def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, type_frais, justificatifs , personnes):
     pdf_path = 'ordre_de_mission.pdf'
     doc = fitz.open(pdf_path)
+
+    budget = np.sum([float(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
 
     budget = str(budget) + " " + "euros"
 
@@ -124,7 +125,7 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
 
 
 
-    if personnes == None:
+    if len(personnes) == 0:
         page.insert_text((75, 357), f'{"cf extraction pegass"}', fontsize=12)
     else:
         for idx, p in enumerate(personnes):
@@ -203,6 +204,12 @@ def create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs):
     merger.close()
     return(output_path)
 
+#if __name__ == "__main__":
+    #app.run(host="0.0.0.0", port=5000, debug=False)
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run()
+
+
+
 
