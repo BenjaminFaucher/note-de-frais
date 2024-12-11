@@ -204,11 +204,11 @@ def create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs):
     merger.close()
     return(output_path)
 
-#if __name__ == "__main__":
-    #app.run(host="0.0.0.0", port=5000, debug=False)
-
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000, debug=False)
+
+#if __name__ == "__main__":
+    #app.run()
 
 
 
