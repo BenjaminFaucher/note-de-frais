@@ -1,6 +1,6 @@
 flask
 pdfrw
-fitz
+PyMuPDF
 numpy
 PyPDF2
 werkzeug
