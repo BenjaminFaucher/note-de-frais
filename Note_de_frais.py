@@ -104,34 +104,33 @@ def formatdate(date,t):
         return date[8:10] + "/" + date[5:7] + "/" + date[:4] + " " + date[11:13] + "h" + date[14:]
 
 
-def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, justificatifs , personnes):
+def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, type_frais, budget, personnes):
     pdf_path = 'ordre_de_mission.pdf'
     doc = fitz.open(pdf_path)
 
-    budget = np.sum([float(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
-
-    budget = str(budget) + " " + "euros"
-
     page = doc[0]
-    page.insert_text((215, 204), f'{mission}', fontsize=12)
-    page.insert_text((215, 223), f'{formatdate(date_debut,2)}', fontsize=12)
-    page.insert_text((215, 242), f'{formatdate(date_fin,2)}', fontsize=12)
-    page.insert_text((215, 261), f'{lieu}', fontsize=12)
-    page.insert_text((215, 280), f'{responsable}', fontsize=12)
+    
+    page.insert_text((215, 160), "Unité locale Paris XII", fontsize=12)
+    page.insert_text((215, 180), "14 Bd Soult, 75012", fontsize=12)
+    
+    
+    page.insert_text((215, 230), f'{mission}', fontsize=12)
+    page.insert_text((215, 250), f'{date_debut}', fontsize=12)
+    page.insert_text((215, 269), f'{date_fin}', fontsize=12)
+    page.insert_text((215, 289), f'{lieu}', fontsize=12)
+    page.insert_text((215, 308), f'{responsable}', fontsize=12)
 
-    page.insert_text((200, 570), 'Remboursement des frais', fontsize=12)
-    page.insert_text((200, 618), f'{budget}', fontsize=12)
+    page.insert_text((200, 610), f'{type_frais}', fontsize=12)
+    page.insert_text((200, 640), f'{budget}', fontsize=12)
+    
+    
+    page.insert_text((200, 640), f'{budget}', fontsize=12)
 
 
-
-    if len(personnes) == 0:
-        page.insert_text((75, 357), f'{"cf extraction pegass"}', fontsize=12)
-    else:
-        for idx, p in enumerate(personnes):
-            page.insert_text((75, 357 + idx*22), f'{p["nom"]}', fontsize=12)
-            page.insert_text((186, 357 + idx*22), f'{p["fonction"]}', fontsize=12)
-            page.insert_text((286, 357 + idx*22), f'{p["delegation"]}', fontsize=12)
-
+    for idx, p in enumerate(personnes):
+            page.insert_text((75, 385 + idx*21), f'{p["nom"]}', fontsize=12)
+            page.insert_text((186, 385 + idx*21), f'{p["fonction"]}', fontsize=12)
+            page.insert_text((286, 385 + idx*21), f'{p["Délégation"]}', fontsize=12)
 
 
     output_path = 'ordre_de_mission_rempli.pdf'
@@ -139,6 +138,8 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
     doc.close()
 
     return output_path
+
+
 
 
 
@@ -153,32 +154,40 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
 #justificatifs = [{"Nature": "Repas 1","Montant" : 120},
                 #{"Nature": "Repas 2","Montant" : 23}]
 
-def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,justificatifs):
+def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,mission,justificatifs):
 
     pdf_path = 'note_de_frais.pdf'
     doc = fitz.open(pdf_path)
 
 
-    somme = np.sum([float(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
+    somme = np.sum([justificatifs[i]["Montant"] for i in range(len(justificatifs))])
 
 
     page = doc[0]
-    page.insert_text((145, 117), f'{nom}', fontsize=12)
-    page.insert_text((145, 135), f'{fonction}', fontsize=12)
-    page.insert_text((450, 127), f'{date}', fontsize=12)
+    page.insert_text((150, 130), f'{nom}', fontsize=12)
+    page.insert_text((150, 150), f'{fonction}', fontsize=12)
+    page.insert_text((450, 140), f'{date}', fontsize=12)
     page.insert_text((362,516),f'{somme}' + " euros")
 
 
 
 
     for idx, p in enumerate(justificatifs):
-        page.insert_text((70, 212 + idx*21), f'{idx}', fontsize=12)
-        page.insert_text((92, 212 + idx*21), f'{formatdate(date_mission,1)} {objet}', fontsize=10)
-        page.insert_text((242, 212 + idx*21), f'{p["Nature"]}', fontsize=12)
-        page.insert_text((362, 212+ idx*21), f'{str(p["Montant"]) + " euros"}', fontsize=12)
+        if idx < 10:
+            page.insert_text((75, 225 + idx*20), f'{idx}', fontsize=12)
+            page.insert_text((105, 225 + idx*20), f'{date_mission} {objet}', fontsize=10)
+            page.insert_text((250, 225 + idx*20), f'{p["Nature"]}', fontsize=12)
+            page.insert_text((362, 225 + idx*20), f'{str(p["Montant"]) + " euros"}', fontsize=12)
+        else:
+            page.insert_text((75, 240 + idx*18), f'{idx}', fontsize=12)
+            page.insert_text((105, 240 + idx*18), f'{date_mission} {objet}', fontsize=10)
+            page.insert_text((250, 240 + idx*18), f'{p["Nature"]}', fontsize=12)
+            page.insert_text((362, 240 + idx*18), f'{str(p["Montant"]) + " euros"}', fontsize=12)
 
+        
 
-
+    page.insert_text((68, 592), "X", fontsize=20)
+    
 
     output_path = 'note_de_frais_rempli.pdf'
     doc.save(output_path)
