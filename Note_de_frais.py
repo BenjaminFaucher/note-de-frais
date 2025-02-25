@@ -72,7 +72,7 @@ def form():
             fichier = request.files[f'fichier_{i}']
             files_justificatifs.append(fichier)
         
-        budget = np.sum([justificatifs[i]["Montant"] for i in range(len(justificatifs))])
+        
             
             
 
@@ -87,7 +87,7 @@ def form():
             files_justificatifs.append(rib_file)
 
         # Génération des PDFs remplis
-        ordre_de_mission = fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, "Adrien Dumont Passegio", budget, personnes)
+        ordre_de_mission = fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, "Adrien Dumont Passegio", justificatifs, personnes)
         note_de_frais = fill_pdf_note_de_frais(nom,fonction,date_debut,ajd,mission,justificatifs)
         pdf_final = create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs)
         
@@ -106,11 +106,13 @@ def formatdate(date,t):
         return date[8:10] + "/" + date[5:7] + "/" + date[:4] + " " + date[11:13] + "h" + date[14:]
 
 
-def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, budget, personnes):
+def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, justificatifs, personnes):
     pdf_path = 'ordre_de_mission.pdf'
     doc = fitz.open(pdf_path)
 
     page = doc[0]
+
+    budget = np.sum([float(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
     
     page.insert_text((215, 160), "Unité locale Paris XII", fontsize=12)
     page.insert_text((215, 180), "14 Bd Soult, 75012", fontsize=12)
