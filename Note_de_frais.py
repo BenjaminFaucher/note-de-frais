@@ -133,7 +133,7 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
     for idx, p in enumerate(personnes):
             page.insert_text((75, 385 + idx*21), f'{p["nom"]}', fontsize=12)
             page.insert_text((186, 385 + idx*21), f'{p["fonction"]}', fontsize=12)
-            page.insert_text((286, 385 + idx*21), f'{p["Délégation"]}', fontsize=12)
+            page.insert_text((286, 385 + idx*21), f'{p["delegation"]}', fontsize=12)
 
 
     output_path = 'ordre_de_mission_rempli.pdf'
@@ -146,13 +146,13 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
 
 
 
-def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,mission,justificatifs):
+def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,justificatifs):
 
     pdf_path = 'note_de_frais.pdf'
     doc = fitz.open(pdf_path)
 
 
-    somme = np.sum([justificatifs[i]["Montant"] for i in range(len(justificatifs))])
+    somme = np.sum([int(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
 
 
     page = doc[0]
@@ -205,8 +205,10 @@ def create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs):
     return(output_path)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
-
+    #app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
+#if __name__ == "__main__":
+    #app.run(debug=True)
 
 
 
