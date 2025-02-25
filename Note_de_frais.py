@@ -102,7 +102,7 @@ def formatdate(date,t):
     date = str(date)
     if t == 1:
         return date[8:10] + "/" + date[5:7] + "/" + date[:4]
-    if t ==2:
+    if t == 2:
         return date[8:10] + "/" + date[5:7] + "/" + date[:4] + " " + date[11:13] + "h" + date[14:]
 
 
@@ -153,7 +153,7 @@ def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,justificatifs):
 
 
     somme = np.sum([int(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
-
+    date = formatdate(date,2)
 
     page = doc[0]
     page.insert_text((150, 130), f'{nom}', fontsize=12)
