@@ -151,9 +151,10 @@ def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,justificatifs):
     pdf_path = 'note_de_frais.pdf'
     doc = fitz.open(pdf_path)
 
+    date_mission = formatdate(date_mission,2)
+
 
     somme = np.sum([int(justificatifs[i]["Montant"]) for i in range(len(justificatifs))])
-    date = formatdate(date,2)
 
     page = doc[0]
     page.insert_text((150, 130), f'{nom}', fontsize=12)
