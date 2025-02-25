@@ -131,7 +131,7 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
 
 
     for idx, p in enumerate(personnes):
-            page.insert_text((75, 385 + idx*21), f'{p["nom"]}', fontsize=12)
+            page.insert_text((75, 385 + idx*21), f'{p["nom"]} {"prenom"}', fontsize=10)
             page.insert_text((186, 385 + idx*21), f'{p["fonction"]}', fontsize=12)
             page.insert_text((286, 385 + idx*21), f'{p["delegation"]}', fontsize=12)
 
