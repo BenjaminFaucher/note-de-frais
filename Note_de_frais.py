@@ -117,6 +117,8 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
     page.insert_text((215, 160), "Unité locale Paris XII", fontsize=12)
     page.insert_text((215, 180), "14 Bd Soult, 75012", fontsize=12)
     
+    date_debut = formatdate(date_debut,2)
+    date_fin = formatdate(date_fin,2)
     
     page.insert_text((215, 230), f'{mission}', fontsize=12)
     page.insert_text((215, 250), f'{date_debut}', fontsize=12)
@@ -125,7 +127,7 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
     page.insert_text((215, 308), f'{responsable}', fontsize=12)
 
     page.insert_text((200, 610), "remboursement des frais", fontsize=12)
-    page.insert_text((200, 640), f'{budget}', fontsize=12)
+    page.insert_text((200, 640), f'{int(budget)} euros', fontsize=12)
     
     
 
