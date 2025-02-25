@@ -143,17 +143,6 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
 
 
 
-
-#nom = "Benjamin Faucher"
-#fonction = "DLAF"
-#date_mission = "19/09/2024"
-#date = "25/10/2024"
-#objet = "Reunion DLUS"
-#mission = "Alpha"
-
-#justificatifs = [{"Nature": "Repas 1","Montant" : 120},
-                #{"Nature": "Repas 2","Montant" : 23}]
-
 def fill_pdf_note_de_frais(nom,fonction,date_mission,date,objet,mission,justificatifs):
 
     pdf_path = 'note_de_frais.pdf'
@@ -213,10 +202,9 @@ def create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs):
     return(output_path)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
-#if __name__ == "__main__":
-    #app.run()
+
 
 
 
