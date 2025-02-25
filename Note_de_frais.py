@@ -71,6 +71,8 @@ def form():
             justificatifs.append({'Nature': nature , 'Montant' : montant})
             fichier = request.files[f'fichier_{i}']
             files_justificatifs.append(fichier)
+        
+        budget = np.sum([justificatifs[i]["Montant"] for i in range(len(justificatifs))])
             
             
 
@@ -85,7 +87,7 @@ def form():
             files_justificatifs.append(rib_file)
 
         # Génération des PDFs remplis
-        ordre_de_mission = fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, "Adrien Dumont Passegio", justificatifs, personnes)
+        ordre_de_mission = fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, "Adrien Dumont Passegio", budget, personnes)
         note_de_frais = fill_pdf_note_de_frais(nom,fonction,date_debut,ajd,mission,justificatifs)
         pdf_final = create_pdf_final(note_de_frais,ordre_de_mission,files_justificatifs)
         
@@ -104,7 +106,7 @@ def formatdate(date,t):
         return date[8:10] + "/" + date[5:7] + "/" + date[:4] + " " + date[11:13] + "h" + date[14:]
 
 
-def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, type_frais, budget, personnes):
+def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, budget, personnes):
     pdf_path = 'ordre_de_mission.pdf'
     doc = fitz.open(pdf_path)
 
@@ -120,11 +122,10 @@ def fill_pdf_ordre_de_mission(mission, date_debut, date_fin, lieu, responsable, 
     page.insert_text((215, 289), f'{lieu}', fontsize=12)
     page.insert_text((215, 308), f'{responsable}', fontsize=12)
 
-    page.insert_text((200, 610), f'{type_frais}', fontsize=12)
+    page.insert_text((200, 610), "remboursement des frais", fontsize=12)
     page.insert_text((200, 640), f'{budget}', fontsize=12)
     
     
-    page.insert_text((200, 640), f'{budget}', fontsize=12)
 
 
     for idx, p in enumerate(personnes):
